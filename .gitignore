@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 .venv/
 .env
+tests/
+installing-new-packages.txt
+secrets.py
