@@ -23,7 +23,7 @@ This project implements a backend service where users can:
 - Pydantic (validation)
 - SQLite (database)
 - SQLAlchemy (ORM)
-- JWT (authentication)
+- JWT (authentication and authorization)
 - bcrypt (password hashing)
 
 ## Goal
