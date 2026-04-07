@@ -1,3 +1,0 @@
-always do it inside the virtual environment, and activated
-check:
-https://fastapi.tiangolo.com/virtual-environments/#what-are-virtual-environments
