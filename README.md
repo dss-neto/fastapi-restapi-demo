@@ -2,21 +2,9 @@
 
 ## Overview
 
-This project implements a backend service where users can:
+A backend service where users can authenticate and manage their tasks.
 
-- Register and login using JWT authentication
-- Create, read, update and delete their own tasks
-
-## Features
-
-- JWT authentication (needed to use the app)
-- Password hashing using bcrypt
-- User registration, login and deletion
-- Task CRUD operations + checking
-- Pagination support for task listing
-- Users can only access their own tasks
-
-## Tech-stack
+## Technologies used
 
 - Python (backend programming language)
 - FastAPI (backend)
@@ -25,10 +13,6 @@ This project implements a backend service where users can:
 - SQLAlchemy (ORM)
 - JWT (authentication and authorization)
 - bcrypt (password hashing)
-
-## Goal
-
-This project's goal was to learn databases and authentication.
 
 ## Installation
 
@@ -40,17 +24,17 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Running the Apllication:
-
-```bash
-uvicorn src.backend.main:app --reload
-```
-
 API will be available at:
 http://127.0.0.1:8000
 
 Interactive docs:
 http://127.0.0.1:8000/docs
+
+## Running the app
+
+```bash
+uvicorn src.backend.main:app --reload
+```
 
 ## License
 
