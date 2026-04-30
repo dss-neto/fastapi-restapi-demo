@@ -24,17 +24,17 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-API will be available at:
-http://127.0.0.1:8000
-
-Interactive docs:
-http://127.0.0.1:8000/docs
-
 ## Running the app
 
 ```bash
 uvicorn src.backend.main:app --reload
 ```
+
+API will be available at:
+http://127.0.0.1:8000
+
+Interactive docs:
+http://127.0.0.1:8000/docs
 
 ## License
 
