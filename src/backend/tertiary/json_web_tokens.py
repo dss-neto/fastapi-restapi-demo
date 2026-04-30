@@ -1,5 +1,5 @@
 import jwt
-from tertiary.validation import (
+from src.backend.tertiary.validation import (
     validate_token,
     raise_unauthorized_error,
 )
