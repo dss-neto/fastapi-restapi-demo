@@ -14,11 +14,13 @@ from sqlalchemy import ForeignKey
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True, autoincrement=True
+    )
     name: Mapped[str]
     email: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
-    # TODO: remove the comment below and try to make it work
+    
     tasks: Mapped[list["Task"]] = relationship(
             back_populates="owner",
     )
@@ -42,7 +44,10 @@ class User(Base):
 class Task(Base):
     __tablename__ = "tasks"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True, 
+        autoincrement=True
+    )
     is_checked: Mapped[int] = mapped_column(default=0)
     title: Mapped[str]
     description: Mapped[Optional[str]]
