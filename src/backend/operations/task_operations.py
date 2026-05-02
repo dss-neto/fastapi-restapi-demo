@@ -6,7 +6,6 @@ from src.backend.database.models import Task
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete, update
 
-#TODO: find out how to stop declaring "With Session(engine)" everytime
 
 def get_task_data(
     task_id: int, 
@@ -15,7 +14,9 @@ def get_task_data(
     # Depends(get_session): FastAPI runs the function and yields session to the endpoint, after finishing the function it closes the session
     # if get_session() was return instead of yield, the with statement would close when  the return is reached
 ):
-    stmt = select(Task).where((Task.id==task_id) & (Task.owner_user_id == owner_user_id))
+    stmt = select(Task).where(
+        (Task.id==task_id) & (Task.owner_user_id == owner_user_id)
+        )
     # This is the SQL statement
     # Hence the "&"
     rows_tuple = session.execute(stmt)
@@ -34,7 +35,15 @@ def get_task_data(
     # acts like [ Task(id, title, ...), ]
     task_data = rows_scalared.first()
     # First item of the iteration. Since there is only one, it will give that. (None if not)
-    return task_data
+    #return task_data
+    return {
+        "id": task_data.id,
+        "is_checked": task_data.is_checked,
+        "title": task_data.title,
+        "description": task_data.description,
+        "owner_user_id": task_data.owner_user_id,
+        "owner_name": task_data.owner.name
+    }
 
 
 def operation_create_task(
@@ -50,13 +59,19 @@ def operation_create_task(
     )
     session.add(task_info)
     session.commit()
+    session.refresh(task_info)
+    # mutates an orm instance into the sql select
+    # stmt = select(Task).where(Task.id == task_info.id)
+    # equal to task_info = session.execute(stmt).scalars().first()
 
+    
     return {
         "id": task_info.id,
+        "is_checked": task_info.is_checked,
         "title": task_info.title,
         "description": task_info.description,
-        "is_checked": task_info.is_checked,
-        "owner_user_id": task_info.owner_user_id
+        "owner_user_id": task_info.owner_user_id,
+        "owner_name": task_info.owner.name,
     }
 
 
