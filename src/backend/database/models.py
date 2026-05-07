@@ -17,6 +17,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(
         primary_key=True, autoincrement=True
     )
+    role: Mapped[str]
     name: Mapped[str]
     email: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
@@ -38,7 +39,7 @@ class User(Base):
     def __repr__(self):
         #task_ids = [task.id for task in self.tasks]
         #return f"User (id={self.id!r}, name={self.name!r}, email={self.email!r}, hashed_password={self.hashed_password!r}, tasks={task_ids!r})"
-        return f"User (id={self.id!r}, name={self.name!r}, email={self.email!r}, hashed_password={self.hashed_password!r})"
+        return f"User (id={self.id!r}, role={self.role!r}, name={self.name!r}, email={self.email!r}, hashed_password={self.hashed_password!r})"
 
 
 class Task(Base):
