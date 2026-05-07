@@ -1,4 +1,5 @@
 import jwt
+from datetime import datetime, timedelta, timezone
 from src.backend.tertiary.validation import (
     validate_token,
     raise_unauthorized_error,
@@ -10,8 +11,14 @@ load_dotenv()
 SECRET_KEY = getenv("secret_key")
 
 
-def generate_user_token(user_id: int, user_email: str):
-    payload_data = {"sub": str(user_id), "email": user_email}
+def generate_user_token(user_id: int, user_email: str, user_role: str):
+    payload_data = {
+        "sub": str(user_id),
+        "email": user_email, 
+        "role": user_role,
+        "iat": datetime.now(timezone.utc),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=15)
+    }
     token = jwt.encode(
         payload=payload_data,
         key=SECRET_KEY,
