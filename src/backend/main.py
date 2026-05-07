@@ -1,8 +1,6 @@
-
-# TODO: ROLES:
-#             ADMINS CAN DELETE AND READ USER DB
-#             GENERAL USERS CAN ONLY CREATE AND DELETE THEIR OWN ROW IN USER DB
+# TODO: JWT expires after 15 minutes, making it unreliable even for checking the role. Fix this
 # TODO: SIMPLE FRONT END
+
 
 from fastapi import FastAPI, Request, Depends
 from sqlalchemy.orm import Session
@@ -32,6 +30,9 @@ class UserSchema(BaseModel):
     # example: {"name": "Bob"} -> "Bob"
     # pasing: convert raw data to usable data
     
+    # Temporary:
+    role: str
+    
 class UserLoginSchema(BaseModel):
     email: str
     password: str
@@ -52,9 +53,16 @@ def register_user(
 
 @app.get("/")
 def read_user_list(
+    request: Request,
     session: Session = Depends(get_session)
 ):
+    from src.backend.tertiary.json_web_tokens import get_decoded_token
     from src.backend.operations.user_operations import operation_read_user_list
+    from src.backend.tertiary.validation import raise_forbidden_error
+    
+    decoded_token_data = get_decoded_token(request)
+    if decoded_token_data["role"] == "Basic":
+        raise_forbidden_error()
     
     return operation_read_user_list(session)
 
