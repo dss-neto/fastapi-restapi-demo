@@ -1,10 +1,11 @@
-# TODO: JWT expires after 15 minutes, making it unreliable even for checking the role. Fix this
+# TODO: JWT expires after 60 minutes
 # TODO: SIMPLE FRONT END
 
-
+from jwt.exceptions import ExpiredSignatureError
 from fastapi import FastAPI, Request, Depends
 from sqlalchemy.orm import Session
 from src.backend.database.db import engine
+from src.backend.tertiary.validation import raise_unauthorized_error
 
 # APIs is the mean of communication between client and server/backend
 # it acts like a restaurant waiter, where the client is the customer and the server is the kitchen
@@ -28,7 +29,7 @@ class UserSchema(BaseModel):
     password: str
     # basemodel also makes pydantic parse data
     # example: {"name": "Bob"} -> "Bob"
-    # pasing: convert raw data to usable data
+    # parsing: convert raw data to usable data
     
     # Temporary:
     role: str
@@ -60,7 +61,10 @@ def read_user_list(
     from src.backend.operations.user_operations import operation_read_user_list
     from src.backend.tertiary.validation import raise_forbidden_error
     
-    decoded_token_data = get_decoded_token(request)
+    try:
+        decoded_token_data = get_decoded_token(request)
+    except ExpiredSignatureError:
+        raise_unauthorized_error()
     if decoded_token_data["role"] == "Basic":
         raise_forbidden_error()
     
@@ -86,8 +90,11 @@ def delete_user(
 ):
     from src.backend.tertiary.json_web_tokens import get_decoded_token
     from src.backend.operations.user_operations import operation_delete_user
-    
-    decoded_token_data = get_decoded_token(request)
+    try:
+        decoded_token_data = get_decoded_token(request)
+    except ExpiredSignatureError:
+        raise_unauthorized_error()
+        
     return operation_delete_user(decoded_token_data, user_id, session)
 
 
@@ -109,7 +116,11 @@ def create_task(
     from src.backend.operations.task_operations import operation_create_task
     from src.backend.tertiary.json_web_tokens import get_decoded_token
     
-    decoded_token_data = get_decoded_token(request)
+    try:
+        decoded_token_data = get_decoded_token(request)
+    except ExpiredSignatureError:
+        raise_unauthorized_error()
+        
     return operation_create_task(task, decoded_token_data, session)
 
 
@@ -123,7 +134,11 @@ def read_task_list(
     from src.backend.operations.task_operations import operation_get_task_list
     from src.backend.tertiary.json_web_tokens import get_decoded_token
  
-    decoded_token_data = get_decoded_token(request)
+    try:
+        decoded_token_data = get_decoded_token(request)
+    except ExpiredSignatureError:
+        raise_unauthorized_error()
+    
     return operation_get_task_list(decoded_token_data, page, limit, session)
 
 
@@ -136,7 +151,11 @@ def read_task(
     from src.backend.operations.task_operations import operation_get_single_task
     from src.backend.tertiary.json_web_tokens import get_decoded_token
     
-    decoded_token_data = get_decoded_token(request)
+    try:
+        decoded_token_data = get_decoded_token(request)
+    except ExpiredSignatureError:
+        raise_unauthorized_error()
+        
     return operation_get_single_task(task_id, decoded_token_data, session)
 
 
@@ -150,7 +169,11 @@ def update_task(
     from src.backend.operations.task_operations import operation_update_task
     from src.backend.tertiary.json_web_tokens import get_decoded_token
     
-    decoded_token_data = get_decoded_token(request)
+    try:
+        decoded_token_data = get_decoded_token(request)
+    except ExpiredSignatureError:
+        raise_unauthorized_error()
+    
     return operation_update_task(task_id, task, decoded_token_data, session)
 
 
@@ -163,5 +186,9 @@ def delete_task(
     from src.backend.operations.task_operations import operation_delete_task
     from src.backend.tertiary.json_web_tokens import get_decoded_token
     
-    decoded_token_data = get_decoded_token(request)
+    try:
+        decoded_token_data = get_decoded_token(request)
+    except ExpiredSignatureError:
+        raise_unauthorized_error()
+        
     return operation_delete_task(task_id, decoded_token_data, session)
