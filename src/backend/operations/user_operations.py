@@ -106,6 +106,8 @@ def operation_delete_user(
         session.execute(stmt)
         session.commit()
         raise_no_content()
+        
+        
     elif decoded_token_data["role"] == "Admin":
         stmt = select(User.role).where(User.id == user_id)
         target_role = session.execute(stmt).scalars().first()
@@ -116,6 +118,8 @@ def operation_delete_user(
             session.execute(stmt)
             session.commit()
             raise_no_content()
+    
+    
     elif user_id == int(decoded_token_data["sub"]):
         stmt = delete(Task).where(Task.owner_user_id == user_id)
         session.execute(stmt)
@@ -123,4 +127,5 @@ def operation_delete_user(
         session.execute(stmt)
         session.commit()
         raise_no_content()
+        
     raise_forbidden_error()
