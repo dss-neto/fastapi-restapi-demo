@@ -17,7 +17,10 @@ def generate_user_token(user_id: int, user_email: str, user_role: str):
         "email": user_email, 
         "role": user_role,
         "iat": datetime.now(timezone.utc),
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=15)
+        # iat = issued at
+        
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=60)
+        # exp = expiration time
     }
     token = jwt.encode(
         payload=payload_data,
